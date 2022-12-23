@@ -12,7 +12,7 @@ defmodule Aoc22 do
   end
 
   defmodule Day5 do
-    def get_tops(file, opts) do
+    def get_tops(file, crane_type) do
       crates = %{
         "1" => ["T", "R", "G", "W", "Q", "M", "F", "P"],
         "2" => ["R", "F", "H"],
@@ -25,29 +25,19 @@ defmodule Aoc22 do
         "9" => ["H", "P", "L", "N", "C", "S", "D"]
       }
 
-      data =
-        file
-        |> read_file()
-
-      case opts do
-        :regular_crane ->
-          Enum.reduce(data, crates, fn x, acc ->
-            x |> move_crates(acc, :regular_crane)
-          end)
-
-        :fancy_crane ->
-          Enum.reduce(data, crates, fn x, acc ->
-            x |> move_crates(acc, :fancy_crane)
-          end)
-      end
+      file
+      |> read_file()
+      |> Enum.reduce(crates, fn x, acc ->
+        x |> move_crates(acc, crane_type)
+      end)
     end
 
-    def move_crates(line, crates, opts) do
+    def move_crates(line, crates, crane_type) do
       {number_to_move, from, to} = convert_to_numbers(line)
       {movers, stayers} = Enum.split(crates[from], number_to_move)
 
       new_to =
-        case opts do
+        case crane_type do
           :regular_crane -> Enum.reverse(movers) ++ Map.fetch!(crates, to)
           :fancy_crane -> movers ++ Map.fetch!(crates, to)
         end
