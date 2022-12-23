@@ -2,6 +2,10 @@ defmodule Aoc22Test do
   use ExUnit.Case
   # doctest Aoc22
 
+  describe "Day 6" do
+    assert Kernel.length(Aoc22.Day6.read_file("lib/day6.txt")) == 4096
+  end
+
   describe "Day 5" do
     test "get tops with fancy crane" do
       assert Aoc22.Day5.get_tops("lib/day5.txt", :fancy_crane) ==

@@ -3,9 +3,15 @@ defmodule Aoc22 do
   Documentation for `Aoc22`.
   """
 
+  defmodule Day6 do
+    def read_file(file) do
+      file
+      |> File.read!()
+      |> String.split("", trim: true)
+    end
+  end
 
   defmodule Day5 do
-
     def get_tops(file, opts) do
       crates = %{
         "1" => ["T", "R", "G", "W", "Q", "M", "F", "P"],
