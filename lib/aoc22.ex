@@ -24,32 +24,37 @@ defmodule Aoc22 do
         "8" => ["R", "Q", "D", "F"],
         "9" => ["H", "P", "L", "N", "C", "S", "D"]
       }
-      data = file
-      |> read_file()
+
+      data =
+        file
+        |> read_file()
 
       case opts do
         :regular_crane ->
-      Enum.reduce(data, crates, fn x, acc ->
-        x |> move_crates(acc, :regular_crane)
-      end)
+          Enum.reduce(data, crates, fn x, acc ->
+            x |> move_crates(acc, :regular_crane)
+          end)
+
         :fancy_crane ->
           Enum.reduce(data, crates, fn x, acc ->
-        x |> move_crates(acc, :fancy_crane)
+            x |> move_crates(acc, :fancy_crane)
           end)
       end
     end
 
     def move_crates(line, crates, opts) do
-        {number_to_move, from, to} = convert_to_numbers(line)
-        {movers, stayers} = Enum.split(crates[from], number_to_move)
-      new_to = case opts do
-        :regular_crane -> Enum.reverse(movers) ++ Map.fetch!(crates, to)
-        :fancy_crane -> movers ++ Map.fetch!(crates, to)
-      end
+      {number_to_move, from, to} = convert_to_numbers(line)
+      {movers, stayers} = Enum.split(crates[from], number_to_move)
+
+      new_to =
+        case opts do
+          :regular_crane -> Enum.reverse(movers) ++ Map.fetch!(crates, to)
+          :fancy_crane -> movers ++ Map.fetch!(crates, to)
+        end
 
       crates
-        |> Map.replace!(to, new_to)
-        |> Map.replace!(from, stayers)
+      |> Map.replace!(to, new_to)
+      |> Map.replace!(from, stayers)
     end
 
     def read_file(file) do
@@ -63,34 +68,37 @@ defmodule Aoc22 do
       numbers = line |> String.split(" ")
       {Enum.at(numbers, 1) |> String.to_integer(), Enum.at(numbers, 3), Enum.at(numbers, 5)}
     end
-
   end
 
   defmodule Day4 do
-    #First >= first
-    #last <= last
-    #if that doesn't work, flip and repeat
+    # First >= first
+    # last <= last
+    # if that doesn't work, flip and repeat
 
     def overlaps_at_all(file) do
       file
       |> read_file()
       |> Enum.reduce(0, fn x, acc ->
-          y = x
-            |> make_ranges()
-            |> check_overlap()
-          y + acc
-          end)
+        y =
+          x
+          |> make_ranges()
+          |> check_overlap()
+
+        y + acc
+      end)
     end
 
     def sum_overlaps(file) do
       file
       |> read_file()
       |> Enum.reduce(0, fn x, acc ->
-          y = x
-            |> make_ranges()
-            |> check_range()
-          y + acc
-          end)
+        y =
+          x
+          |> make_ranges()
+          |> check_range()
+
+        y + acc
+      end)
     end
 
     def check_overlap([{a, b}, {c, d}]) do
@@ -141,10 +149,10 @@ defmodule Aoc22 do
           x
           |> dupes_in_list()
           |> prioritize()
+
         acc + priority
       end)
     end
-
 
     def sum_priorities(file) do
       file
@@ -155,6 +163,7 @@ defmodule Aoc22 do
           |> split_in_half()
           |> dupes_in_tuple()
           |> prioritize()
+
         acc + priority
       end)
     end
@@ -162,14 +171,20 @@ defmodule Aoc22 do
     def prioritize(input) do
       lower = ?a..?z |> Enum.to_list()
       upper = ?A..?Z |> Enum.to_list()
-      full_list = lower ++ upper
-                  |> Enum.to_list()
-      index = Enum.find_index(full_list,
-        fn x ->
-          x == List.first(input)
-        end)
-      index + 1
 
+      full_list =
+        (lower ++ upper)
+        |> Enum.to_list()
+
+      index =
+        Enum.find_index(
+          full_list,
+          fn x ->
+            x == List.first(input)
+          end
+        )
+
+      index + 1
     end
 
     def dupes_in_list([a, b, c]) do
@@ -180,6 +195,7 @@ defmodule Aoc22 do
     def dupes_in_tuple({a, b}) do
       left = String.to_charlist(a) |> MapSet.new()
       right = String.to_charlist(b) |> MapSet.new()
+
       MapSet.intersection(left, right)
       |> MapSet.to_list()
       |> Kernel.to_charlist()
@@ -187,9 +203,11 @@ defmodule Aoc22 do
 
     def split_in_half(string) do
       split_point = div(String.length(string), 2)
+
       string
       |> String.split_at(split_point)
-      #returns tuple
+
+      # returns tuple
     end
 
     def read_file(file) do
@@ -200,8 +218,6 @@ defmodule Aoc22 do
       |> Kernel.tl()
       |> Enum.reverse()
     end
-
-
   end
 
   defmodule Day2 do
@@ -244,7 +260,6 @@ defmodule Aoc22 do
     def convert_line("C Z"), do: score_line("C X")
     def convert_line(""), do: score_line("")
 
-
     def part_two(file) do
       file
       |> read_file()
@@ -269,68 +284,69 @@ defmodule Aoc22 do
   end
 
   defmodule Day1 do
-  # DAY 1
-  # need to find the elf with the most calories
-  # each elf's stash is separated with a /n
-  #
-  # go through each grouping and find its total
-  # return list of totals
-  #
-  # reduce list by
-  # put first total as acc
-  # if next total is higher, replace acc
+    # DAY 1
+    # need to find the elf with the most calories
+    # each elf's stash is separated with a /n
+    #
+    # go through each grouping and find its total
+    # return list of totals
+    #
+    # reduce list by
+    # put first total as acc
+    # if next total is higher, replace acc
 
-  def find_most_calories(file) do
-    file |>
-    read_and_group() |>
-    reduce_list_of_lists() |>
-    most_calories()
-  end
+    def find_most_calories(file) do
+      file
+      |> read_and_group()
+      |> reduce_list_of_lists()
+      |> most_calories()
+    end
 
-  def find_top_three(file) do
-    file |>
-    read_and_group() |>
-    reduce_list_of_lists() |>
-    top_three()
-  end
+    def find_top_three(file) do
+      file
+      |> read_and_group()
+      |> reduce_list_of_lists()
+      |> top_three()
+    end
 
-  def read_and_group(file) do
-    file
-    |> File.read!()
-    |> String.split("\n\n")
-    |> Enum.map(fn x ->
-      x |> String.split("\n", trim: true) |> Enum.map(&String.to_integer/1)
-    end)
-  end
-
-  def reduce_list_of_lists(l_o_l) do
-    Enum.reduce(l_o_l, [], fn x, acc ->
-      get_sum = Enum.reduce(x, fn y, acc ->
-        y + acc
+    def read_and_group(file) do
+      file
+      |> File.read!()
+      |> String.split("\n\n")
+      |> Enum.map(fn x ->
+        x |> String.split("\n", trim: true) |> Enum.map(&String.to_integer/1)
       end)
-      [get_sum | acc]
-    end)
-  end
+    end
 
-  def most_calories(list_of_calories) do
-    Enum.reduce(list_of_calories, 0, fn x, acc ->
-      if x > acc do
-        acc = x
-        acc
-      else
-        acc
-      end
-    end)
-  end
+    def reduce_list_of_lists(l_o_l) do
+      Enum.reduce(l_o_l, [], fn x, acc ->
+        get_sum =
+          Enum.reduce(x, fn y, acc ->
+            y + acc
+          end)
 
-  def top_three(list_of_calories) do
-    list_of_calories
-    |> Enum.sort( &(&1 >= &2))
-    |> Enum.slice(0..2)
-    |> Enum.reduce(fn x, acc ->
-      x + acc
-    end)
-  end
-  end
+        [get_sum | acc]
+      end)
+    end
 
+    def most_calories(list_of_calories) do
+      Enum.reduce(list_of_calories, 0, fn x, acc ->
+        if x > acc do
+          acc = x
+          acc
+        else
+          acc
+        end
+      end)
+    end
+
+    def top_three(list_of_calories) do
+      list_of_calories
+      |> Enum.sort(&(&1 >= &2))
+      |> Enum.slice(0..2)
+      |> Enum.reduce(fn x, acc ->
+        x + acc
+      end)
+    end
+  end
 end
