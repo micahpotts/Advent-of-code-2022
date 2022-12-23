@@ -3,6 +3,63 @@ defmodule Aoc22 do
   Documentation for `Aoc22`.
   """
 
+
+  defmodule Day5 do
+
+    def get_tops(file, opts) do
+      crates = %{
+        "1" => ["T", "R", "G", "W", "Q", "M", "F", "P"],
+        "2" => ["R", "F", "H"],
+        "3" => ["D", "S", "H", "G", "V", "R", "Z", "P"],
+        "4" => ["G", "W", "F", "B", "P", "H", "Q"],
+        "5" => ["H", "J", "M", "S", "P"],
+        "6" => ["L", "P", "R", "S", "H", "T", "Z", "M"],
+        "7" => ["L", "M", "N", "H", "T", "P"],
+        "8" => ["R", "Q", "D", "F"],
+        "9" => ["H", "P", "L", "N", "C", "S", "D"]
+      }
+      data = file
+      |> read_file()
+
+      case opts do
+        :regular_crane ->
+      Enum.reduce(data, crates, fn x, acc ->
+        x |> move_crates(acc, :regular_crane)
+      end)
+        :fancy_crane ->
+          Enum.reduce(data, crates, fn x, acc ->
+        x |> move_crates(acc, :fancy_crane)
+          end)
+      end
+    end
+
+    def move_crates(line, crates, opts) do
+        {number_to_move, from, to} = convert_to_numbers(line)
+        {movers, stayers} = Enum.split(crates[from], number_to_move)
+      new_to = case opts do
+        :regular_crane -> Enum.reverse(movers) ++ Map.fetch!(crates, to)
+        :fancy_crane -> movers ++ Map.fetch!(crates, to)
+      end
+
+      crates
+        |> Map.replace!(to, new_to)
+        |> Map.replace!(from, stayers)
+    end
+
+    def read_file(file) do
+      file
+      |> File.read!()
+      |> String.split("\n", trim: true)
+      |> Enum.drop(9)
+    end
+
+    def convert_to_numbers(line) do
+      numbers = line |> String.split(" ")
+      {Enum.at(numbers, 1) |> String.to_integer(), Enum.at(numbers, 3), Enum.at(numbers, 5)}
+    end
+
+  end
+
   defmodule Day4 do
     #First >= first
     #last <= last

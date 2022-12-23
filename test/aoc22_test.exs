@@ -2,6 +2,50 @@ defmodule Aoc22Test do
   use ExUnit.Case
   # doctest Aoc22
 
+  describe "Day 5" do
+    test "get tops with fancy crane" do
+      assert Aoc22.Day5.get_tops("lib/day5.txt", :fancy_crane) ==
+        %{
+              "1" => ["D", "P", "J", "T", "V"],
+              "2" => ["M", "N", "H", "M"],
+              "3" => ["R", "Q", "F", "P", "T", "N"],
+              "4" => ["D", "Q"],
+              "5" => ["F"],
+              "6" => ["R", "H", "P", "R", "F", "R", "S", "Q", "D", "P", "P", "M", "G", "L", "L", "S", "W", "W", "Z", "B"],
+              "7" => ["H", "P"],
+              "8" => ["H", "S", "T", "M", "S", "R", "G", "P", "H", "G", "F", "H", "C", "L", "Z"],
+              "9" => ["H"]
+            }
+    end
+    test "get tops" do
+      assert Aoc22.Day5.get_tops("lib/day5.txt", :regular_crane) ==
+        %{
+              "1" => ["T", "M", "M", "Q", "R"],
+              "2" => ["P", "R", "S", "H"],
+              "3" => ["G", "P", "C", "D", "Z", "T"],
+              "4" => ["V", "F"],
+              "5" => ["Q"],
+              "6" => ["P", "L", "B", "H", "S", "H", "W", "F", "M", "R", "G", "S", "M", "N", "R", "G", "S", "P", "H", "P"],
+              "7" => ["F", "F"],
+              "8" => ["D", "P", "Q", "D", "J", "H", "N", "T", "L", "W", "Z", "L", "H", "P", "R"],
+              "9" => ["H"]
+            }
+    end
+    test "move crates" do
+      assert Aoc22.Day5.move_crates("move 3 from 1 to 2",
+        %{"1" => [1, 2, 3, 4], "2" => [5, 6]}, :regular_crane) == %{"1" => [4], "2" => [3, 2, 1, 5, 6]}
+      end
+    assert Aoc22.Day5.move_crates("move 3 from 2 to 1", %{
+        "1" => [1, 2, 3, 4],
+        "2" => [5, 6]}, :regular_crane) == %{"1" => [6, 5, 1, 2, 3, 4], "2" => []}
+    test "convert to numbers" do
+      assert Aoc22.Day5.convert_to_numbers("move 3 from 8 to 9") == {3, "8", "9"}
+    end
+    test "read file removes initial list" do
+      assert List.first(Aoc22.Day5.read_file("lib/day5.txt")) == "move 3 from 8 to 9"
+    end
+  end
+
   describe "Day 4" do
     test "overlaps at all" do
       assert Aoc22.Day4.overlaps_at_all("lib/day4.txt") == 926
