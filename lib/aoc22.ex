@@ -4,6 +4,37 @@ defmodule Aoc22 do
   """
 
   defmodule Day6 do
+    def find_start_of_message(file) do
+      file
+      |> read_file()
+      |> start_of_message()
+    end
+
+    def start_of_message(list) do
+      Enum.reduce_while(list, 0, fn _n, acc ->
+        sub_list =
+          [
+            Enum.at(list, acc),
+            Enum.at(list, acc + 1),
+            Enum.at(list, acc + 2),
+            Enum.at(list, acc + 3),
+            Enum.at(list, acc + 4),
+            Enum.at(list, acc + 5),
+            Enum.at(list, acc + 6),
+            Enum.at(list, acc + 7),
+            Enum.at(list, acc + 8),
+            Enum.at(list, acc + 9),
+            Enum.at(list, acc + 10),
+            Enum.at(list, acc + 11),
+            Enum.at(list, acc + 12),
+            Enum.at(list, acc + 13)
+          ]
+          |> Enum.uniq()
+
+        if Kernel.length(sub_list) != 14, do: {:cont, acc + 1}, else: {:halt, acc + 14}
+      end)
+    end
+
     def find_start_of_packet(file) do
       file
       |> read_file()

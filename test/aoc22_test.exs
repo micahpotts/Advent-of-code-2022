@@ -3,6 +3,10 @@ defmodule Aoc22Test do
   # doctest Aoc22
 
   describe "Day 6" do
+    test "find start of message from file" do
+      assert Aoc22.Day6.find_start_of_message("lib/day6.txt") == 2178
+    end
+
     test "find start of packet from file" do
       assert Aoc22.Day6.find_start_of_packet("lib/day6.txt") == 1578
     end
@@ -12,7 +16,7 @@ defmodule Aoc22Test do
     end
 
     test "harder start of packetv from list" do
-      assert Aoc22.Day6.start_of_packet([1, 2, 1, 2, 4, 1, 3]) == 6
+      assert Aoc22.Day6.start_of_packet([1, 2, 1, 2, 4, 1, 3]) == 7
     end
 
     test "read file and turn it into list" do
