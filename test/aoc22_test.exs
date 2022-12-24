@@ -3,7 +3,21 @@ defmodule Aoc22Test do
   # doctest Aoc22
 
   describe "Day 6" do
-    assert Kernel.length(Aoc22.Day6.read_file("lib/day6.txt")) == 4096
+    test "find start of packet from file" do
+      assert Aoc22.Day6.find_start_of_packet("lib/day6.txt") == 1578
+    end
+
+    test "find start of packet from list" do
+      assert Aoc22.Day6.start_of_packet([1, 2, 1, 3, 4]) == 5
+    end
+
+    test "harder start of packetv from list" do
+      assert Aoc22.Day6.start_of_packet([1, 2, 1, 2, 4, 1, 3]) == 6
+    end
+
+    test "read file and turn it into list" do
+      assert Kernel.length(Aoc22.Day6.read_file("lib/day6.txt")) == 4096
+    end
   end
 
   describe "Day 5" do

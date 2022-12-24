@@ -4,6 +4,27 @@ defmodule Aoc22 do
   """
 
   defmodule Day6 do
+    def find_start_of_packet(file) do
+      file
+      |> read_file()
+      |> start_of_packet()
+    end
+
+    def start_of_packet(list) do
+      Enum.reduce_while(list, 0, fn _n, acc ->
+        sub_list =
+          [
+            Enum.at(list, acc),
+            Enum.at(list, acc + 1),
+            Enum.at(list, acc + 2),
+            Enum.at(list, acc + 3)
+          ]
+          |> Enum.uniq()
+
+        if Kernel.length(sub_list) != 4, do: {:cont, acc + 1}, else: {:halt, acc + 4}
+      end)
+    end
+
     def read_file(file) do
       file
       |> File.read!()
